@@ -7,7 +7,14 @@ module.exports = function(grunt) {
       server: {
         options: {
           port: 8000,
-          keepalive: true
+          base: {
+            path: '.',
+            options: {
+              index: 'locomotion.html'
+            }
+          },
+          keepalive: true,
+          open: true
         }
       }
     }   
