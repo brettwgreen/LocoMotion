@@ -1,0 +1,17 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "LocoMotion - Motion charts using D3",
+  "main": "index.js",
+  "dependencies": {
+    "bower": "^1.7.9",
+    "grunt-web-server": "^1.2.3",
+    "grunt": "^1.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
