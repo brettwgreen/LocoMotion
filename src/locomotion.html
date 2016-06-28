@@ -2,8 +2,27 @@
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
-<title>Loco Motion</title>
-<style>
-</style>
+<head>
+	<title>Loco Motion</title>
+</head>
+<body>
+<div class="chart"></div>
+</body>
 
+
+<script src="/bower_components/d3/d3.js" charset="utf-8"></script></script>
+<script>
+var data = [4, 8, 15, 16, 23, 42];
+
+d3.select(".chart")
+	.data(data)
+	.enter().append("div")
+	.style("width", function(d) { return d*10 + "px"; })
+	.style("background-color", "steelblue")
+	.style("color", "white")
+	.style("margin", "1px")
+	.style("padding", "3px")
+	.text(function(d) { return d; });
+	
+</script>
 </html>
