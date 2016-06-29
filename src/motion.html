@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>Loco Motion</title>
+	<style>
+		.circle {
+			fill: steelblue;
+		}
+		
+		.axis text {
+			font: 10px sans-serif;
+		}
+		
+		.axis path,
+		.axis line {
+			fill: none;
+			stroke: #000;
+			shape-rendering: crispEdges;
+		}
+		.x.axis path {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+<svg></svg>
+</body>
+
+
+<script src="/bower_components/d3/d3.js" charset="utf-8"></script>
+<script>
+var data = [32, 57, 112];
+
+var svg = d3.select("svg");
+var circle = svg.selectAll("circle").data(data, function(d) { return d; });
+circle.enter().append("circle")
+	.attr("cy", 60)
+	.attr("cx", function(d, i) { return i * 100 + 30; })
+	.attr("r", function(d) { return Math.sqrt(d); })
+	.attr("class", "circle");
+
+</script>
+</html>
