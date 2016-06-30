@@ -32,7 +32,7 @@
 <script src="/bower_components/d3/d3.js" charset="utf-8"></script>
 <script>
 var data = [{x: 50, y: 50, r: 25}];
-var width = 1500, height = 800, maxRadius = 200;
+var width = 1500, height = 800, maxRadius = 200, circleCount = 20;
 
 var color = d3.scale.category20();
 
@@ -59,22 +59,26 @@ var makeCircles = function() {
 		.transition()
 		.duration(500)
 		.attr("fill", function(d, i){ return color(i); });
-}
+};
+
+var fadeToBlack = function() {
+	var circle = d3.select(this);
+	circle.transition().duration(500).attr("fill", "#000000");
+};
 
 var removeCircles = function() {
-	var circle = svg.selectAll("circle");
-	circle.data(data)
-		.exit()
-		.transition()
+	var circle = svg.selectAll("circle").data(data).exit();
+		
+	circle.transition()
 		.duration(500)
-		.attr("fill", "#000000")
+		.each(fadeToBlack)
 		.transition()
 		.duration(1000)
 		.attr("fill", "#ff0000")
 		.transition()
-		.duration(1000)
 		.attr("r", 0)
-		.remove();
+		.remove(); 
+		
 }
 
 var removeRandomCircle = function() {
@@ -92,7 +96,7 @@ var removeRandomCircle = function() {
 	}
 	data.splice(i, 1);
 	removeCircles();
-}
+};
 
 var addRandomCircle = function() {
 	var r = Math.floor(Math.random() * maxRadius);
@@ -101,7 +105,7 @@ var addRandomCircle = function() {
 	var y = Math.floor(d, height-d);
 	data.push({x: x, y: y, r: r});
 	makeCircles();
-	if (data.length >= 100) {
+	if (data.length >= circleCount) {
 		window.clearInterval(intervalId);
 		intervalId = window.setInterval(removeRandomCircle, 200);
 	}
