@@ -48,27 +48,41 @@ var circleVM  = function() {
 
 	self.x = d3.scale.linear()
 		.domain([0, 4])
-		.range([50, self.width-50]);
+		.range([100, self.width-100]);
+
+	self.r = d3.scale.log()
+		.domain([10, 40])
+		.rangeRound([20, 100]);
+		
 
 	self.svg = d3.select("svg")
 		.attr("width", self.width)
 		.attr("height", self.height);
-
-	self.updateCircles = function() {
-		var circle = self.svg.selectAll("circle").data(self.data());
-		circle.attr("r", function(d) { return d.value(); } )
-			.attr("cy", function(d) { return 10 + (parseInt(d.value())); })
+	
+	self.radius = function(selection) {
+		selection.attr("r", function(d) { console.log(self.r.domain); var val = self.r(parseInt(d.value())); console.log("r=" + val); return val;} )
+			.attr("cy", function(d) { return 10 + (self.r(parseInt(d.value()))); })
 			.attr("cx", function(d,i) { var val = self.x(i); console.log(i + "=" + val); return val; })
+	}
+		
+	self.updateCircles = function() {
+		self.setRadiusDomain();
+		var circle = self.svg.selectAll("circle").data(self.data());
+		self.radius(circle);
 		circle.enter();
+		self.svg.selectAll("circle").call(self.r);
 	};
 	
+	self.setRadiusDomain = function() {
+		self.r.domain(d3.extent(self.data(), function(d) { return parseInt(d.value()); }));
+		self.r.range([20, 100]);
+	};
 	self.makeCircles = function() {
+		self.setRadiusDomain();
 		var circle = self.svg.selectAll("circle")
 			.data(self.data()).enter().append("circle")
-			.attr("r", function(d) { return d.value(); } )
-			.attr("cy", function(d) { return 10 + (d.value()); })
-			.attr("cx", function(d,i) { var val = self.x(i); console.log(i + "=" + val); return val; })
 			.attr("fill", "steelblue")
+		self.radius(circle);
 	};
 
 };
