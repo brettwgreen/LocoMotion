@@ -70,7 +70,6 @@ var circleVM  = function() {
 		var circle = self.svg.selectAll("circle").data(self.data());
 		self.radius(circle);
 		circle.enter();
-		self.svg.selectAll("circle").call(self.r);
 	};
 	
 	self.setRadiusDomain = function() {
