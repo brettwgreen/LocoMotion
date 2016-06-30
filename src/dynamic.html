@@ -34,7 +34,7 @@ var circleVM  = function() {
 	self.data = ko.observableArray([
 		{name: "A", value: ko.observable(10)},
 		{name: "B", value: ko.observable(15)},
-		{name: "C", value: ko.observable(20)},
+		{name: "C", value: ko.observable(75)},
 		{name: "D", value: ko.observable(30)},
 		{name: "E", value: ko.observable(40)}
 		]);
@@ -60,11 +60,11 @@ var circleVM  = function() {
 		.attr("height", self.height);
 	
 	self.radius = function(selection) {
-		selection.attr("r", function(d) { console.log(self.r.domain); var val = self.r(parseInt(d.value())); console.log("r=" + val); return val;} )
+		selection.attr("r", function(d) { var val = self.r(parseInt(d.value())); console.log("r=" + val); return val;} )
 			.attr("cy", function(d) { return 10 + (self.r(parseInt(d.value()))); })
-			.attr("cx", function(d,i) { var val = self.x(i); console.log(i + "=" + val); return val; })
+			//.attr("cx", function(d,i) { var val = self.x(i); console.log(i + "=" + val); return val; })
 	}
-		
+	
 	self.updateCircles = function() {
 		self.setRadiusDomain();
 		var circle = self.svg.selectAll("circle").data(self.data());
@@ -78,10 +78,17 @@ var circleVM  = function() {
 	};
 	self.makeCircles = function() {
 		self.setRadiusDomain();
-		var circle = self.svg.selectAll("circle")
-			.data(self.data()).enter().append("circle")
-			.attr("fill", "steelblue")
+		var circle = self.svg.selectAll("g")
+			.data(self.data(), function(d){ return d.value(); }).enter().append("g")
+			.attr("transform", function(d,i) { return "translate(" + (5 + self.x(i)) + ",20)"; })
+			.append("circle")
+			.attr("fill", "steelblue");
 		self.radius(circle);
+		self.svg.selectAll("g")
+			.append("text")
+			.text(function(d) { return d.name; })
+			.attr("dx", function(d,i) { self.x(i); });
+			
 	};
 
 };
