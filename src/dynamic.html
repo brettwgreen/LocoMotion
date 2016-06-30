@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>Loco Motion</title>
+	<style>
+		input[type='textbox'] {
+			margin: 10px;
+		}
+	</style>
+</head>
+<body>
+<svg></svg>
+<div class="inputSection">
+	<!-- ko foreach: data -->
+	<input type="text" data-bind="value: value">
+	<!-- /ko -->
+</div>
+</body>
+
+
+<script src="/bower_components/d3/d3.js" charset="utf-8"></script>
+<script src="/bower_components/knockout/dist/knockout.js" charset="utf-8"></script>
+
+<script>
+
+var circleVM  = function() {
+	var self = this;
+	self.width = 1500;
+	self.height = 300;
+	self.radius = 200;
+	
+	self.data = ko.observableArray([
+		{name: "A", value: ko.observable(10)},
+		{name: "B", value: ko.observable(15)},
+		{name: "C", value: ko.observable(20)},
+		{name: "D", value: ko.observable(30)},
+		{name: "E", value: ko.observable(40)}
+		]);
+
+	for (var i=0; i<self.data().length;i++) {
+		self.data()[i].value.subscribe(function(newValue) {
+			console.log("circles updated");
+			self.updateCircles();
+		});
+	}
+
+	self.x = d3.scale.linear()
+		.domain([0, 4])
+		.range([50, self.width-50]);
+
+	self.svg = d3.select("svg")
+		.attr("width", self.width)
+		.attr("height", self.height);
+
+	self.updateCircles = function() {
+		var circle = self.svg.selectAll("circle").data(self.data());
+		circle.attr("r", function(d) { return d.value(); } )
+			.attr("cy", function(d) { return 10 + (parseInt(d.value())); })
+			.attr("cx", function(d,i) { var val = self.x(i); console.log(i + "=" + val); return val; })
+		circle.enter();
+	};
+	
+	self.makeCircles = function() {
+		var circle = self.svg.selectAll("circle")
+			.data(self.data()).enter().append("circle")
+			.attr("r", function(d) { return d.value(); } )
+			.attr("cy", function(d) { return 10 + (d.value()); })
+			.attr("cx", function(d,i) { var val = self.x(i); console.log(i + "=" + val); return val; })
+			.attr("fill", "steelblue")
+	};
+
+};
+
+var vm = new circleVM();
+
+ko.applyBindings(vm);
+vm.makeCircles();
+
+</script>
+</html>
