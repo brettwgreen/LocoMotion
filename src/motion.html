@@ -31,15 +31,51 @@
 
 <script src="/bower_components/d3/d3.js" charset="utf-8"></script>
 <script>
-var data = [32, 57, 112];
+var data = [{x: 50, y: 50, r: 25}];
+var width = 1500, height = 800, maxRadius = 200;
 
-var svg = d3.select("svg");
-var circle = svg.selectAll("circle").data(data, function(d) { return d; });
-circle.enter().append("circle")
-	.attr("cy", 60)
-	.attr("cx", function(d, i) { return i * 100 + 30; })
-	.attr("r", function(d) { return Math.sqrt(d); })
-	.attr("class", "circle");
+var color = d3.scale.category20();
 
+var svg = d3.select("svg")
+	.attr("width", width)
+	.attr("height", height);
+
+var getRandomInt = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var makeCircles = function() {
+	console.log(data.length);
+	var circle = svg.selectAll("circle");
+	
+	var circleEnter = circle.data(data)
+		.enter().append("circle")
+		.attr("cy", function(circle){ return circle.y; console.log("y is " + y); })
+		.attr("cx", function(circle) { return circle.x; })
+		.attr("fill", "#000000")
+		.attr("r", 0)
+		.transition()
+		.duration(500)
+		.attr("r", function(circle) { return circle.r; })
+		.transition()
+		.duration(500)
+		.attr("fill", function(d, i){ return color(i); });
+}
+
+var addRandomCircle = function() {
+	var r = Math.floor(Math.random() * maxRadius);
+	var d = r*2;
+	var x = getRandomInt(d, width-d)
+	var y = Math.floor(d, height-d);
+	console.log("r=" + r + ",x=" + x + "y=" + y);
+	data.push({x: x, y: y, r: r});
+	makeCircles();
+	if (data.length >= 100) {
+		window.clearInterval(intervalId);
+	}
+}
+//makeCircles();
+
+var intervalId = window.setInterval(addRandomCircle, 200);
 </script>
 </html>
